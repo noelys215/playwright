@@ -130,3 +130,20 @@ test("extracting values from DOM", async ({ page }) => {
   const placeholderValue = await emailField.getAttribute("placeholder");
   expect(placeholderValue).toEqual("Email");
 });
+
+test("assertions", async ({ page }) => {
+  const basicFormButton = page
+    .locator("nb-card")
+    .filter({ hasText: "Basic form" })
+    .locator("button");
+  // General Assertions
+  const text = await basicFormButton.textContent();
+  expect(text).toEqual("Submit");
+
+  // Locators Assertions
+  await expect(basicFormButton).toHaveText("Submit");
+
+  // Soft Assertions
+  await expect.soft(basicFormButton).toHaveText("Submit");
+  await basicFormButton.click();
+});
