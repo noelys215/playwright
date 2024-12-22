@@ -204,10 +204,31 @@ test("date picker", async ({ page }) => {
   const calendarInputField = page.getByPlaceholder("Form Picker");
   await calendarInputField.click();
 
+  let date = new Date();
+  date.setDate(date.getDate() + 5);
+  const expectedDate = date.getDate().toString();
+  const expectedMonthShort = date.toLocaleString("default", { month: "short" });
+  const expectedMonthLong = date.toLocaleString("default", { month: "long" });
+  const expectedYear = date.getFullYear().toString();
+  const dateToAssert = `${expectedMonthShort} ${expectedDate}, ${expectedYear}`;
+
+  let calendarMonthAndYear = await page
+    .locator("nb-calendar-view-mode")
+    .textContent();
+
+  const expectedMonthAndYear = `${expectedMonthLong} ${expectedYear}`;
+
+  while (!calendarMonthAndYear.includes(expectedMonthAndYear)) {
+    await page.locator("nb-calendar-pageable-navigation chevron-right").click();
+    calendarMonthAndYear = await page
+      .locator("nb-calendar-view-mode")
+      .textContent();
+  }
+
   await page
     .locator('[class="day-cell ng-star-inserted"]')
-    .getByText("1", { exact: true })
+    .getByText(expectedDate, { exact: true })
     .click();
 
-  await expect(calendarInputField).toHaveValue("Dec 1, 2024");
+  await expect(calendarInputField).toHaveValue(dateToAssert);
 });
