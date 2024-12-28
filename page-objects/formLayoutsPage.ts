@@ -38,7 +38,7 @@ export class FormLayoutsPage {
    *
    * @param name
    * @param email
-   * @param rememberMe
+   * @param rememberMe true or false
    */
   async submitInlineFormWithNameEmailAndCheckbox(
     name: string,
